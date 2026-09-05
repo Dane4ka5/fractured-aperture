@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fractured Aperture — новая глава Portal</title>
     <style>
-        /* ---------- ГЛОБАЛЬНЫЙ СТИЛЬ ---------- */
+        /* ===== ОСНОВНЫЕ СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -17,15 +17,31 @@
             color: #ddd;
             font-family: 'Courier New', monospace;
             line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 20px 30px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* ---------- ШАПКА ---------- */
+        /* ===== АНИМИРОВАННЫЙ ФОН ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* ===== ШАПКА ===== */
         header {
             display: flex;
             justify-content: space-between;
@@ -34,6 +50,7 @@
             border-bottom: 1px solid #2a2a2a;
             flex-wrap: wrap;
             gap: 15px;
+            position: relative;
         }
 
         .logo {
@@ -68,7 +85,182 @@
             color: #FFA500;
         }
 
-        /* ---------- ГЛАВНЫЙ ЭКРАН (HERO) ---------- */
+        /* ===== КНОПКА КОНСОЛИ ===== */
+        .console-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #1a1a1a;
+            border: 2px solid #FFA500;
+            color: #FFA500;
+            font-size: 22px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.1);
+        }
+
+        .console-toggle:hover {
+            background: #FFA500;
+            color: #0a0a0a;
+            box-shadow: 0 0 40px rgba(255, 165, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* ===== ОВЕРЛЕЙ КОНСОЛИ ===== */
+        .console-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 200;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .console-overlay.active {
+            display: flex;
+        }
+
+        .console-window {
+            width: 100%;
+            max-width: 750px;
+            max-height: 80vh;
+            background: #0d0d0d;
+            border: 2px solid #FFA500;
+            padding: 25px;
+            box-shadow: 0 0 60px rgba(255, 165, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .console-window::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 20px;
+            height: 20px;
+            border-top: 3px solid #FFA500;
+            border-left: 3px solid #FFA500;
+        }
+        .console-window::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 20px;
+            height: 20px;
+            border-bottom: 3px solid #FFA500;
+            border-right: 3px solid #FFA500;
+        }
+
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .console-header .title {
+            color: #FFA500;
+            letter-spacing: 2px;
+        }
+
+        .console-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .console-close:hover {
+            color: #FFA500;
+            transform: rotate(90deg);
+        }
+
+        .console-output {
+            flex: 1;
+            min-height: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #ccc;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .console-output .line {
+            margin-bottom: 4px;
+        }
+
+        .console-output .line.system {
+            color: #FFA500;
+        }
+        .console-output .line.error {
+            color: #ff4444;
+        }
+        .console-output .line.success {
+            color: #44ff88;
+        }
+        .console-output .line.info {
+            color: #66ccff;
+        }
+
+        .console-input-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 10px;
+        }
+
+        .console-prompt {
+            color: #FFA500;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .console-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            transition: border-color 0.3s;
+        }
+
+        .console-input:focus {
+            border-bottom-color: #FFA500;
+        }
+
+        /* ===== ОСТАЛЬНЫЕ БЛОКИ ===== */
         .hero {
             padding: 70px 0 50px;
             border-bottom: 1px solid #1a1a1a;
@@ -118,7 +310,6 @@
             box-shadow: 0 0 40px rgba(255, 165, 0, 0.2);
         }
 
-        /* ---------- БЛОК "ОБ ИГРЕ" ---------- */
         .about {
             padding: 50px 0;
             border-bottom: 1px solid #1a1a1a;
@@ -147,7 +338,6 @@
             color: #fff;
         }
 
-        /* ---------- ПЕРСОНАЖИ (мини) ---------- */
         .characters {
             margin-top: 30px;
         }
@@ -187,7 +377,6 @@
             margin-top: 5px;
         }
 
-        /* ---------- ПОДВАЛ ---------- */
         footer {
             padding: 30px 0 20px;
             border-top: 1px solid #1a1a1a;
@@ -219,7 +408,7 @@
             line-height: 1.4;
         }
 
-        /* ---------- АДАПТИВНОСТЬ ---------- */
+        /* ===== АДАПТИВНОСТЬ ===== */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -244,14 +433,55 @@
             .logo {
                 font-size: 22px;
             }
+            .console-toggle {
+                top: 15px;
+                right: 15px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+            .console-window {
+                max-height: 90vh;
+                padding: 18px;
+            }
+            .console-output {
+                min-height: 150px;
+                max-height: 250px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- ===== ФОН ===== -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ===== КНОПКА КОНСОЛИ ===== -->
+    <div class="console-toggle" id="consoleToggle" title="Открыть консоль Aperture">
+        &gt;_
+    </div>
+
+    <!-- ===== КОНСОЛЬ ===== -->
+    <div class="console-overlay" id="consoleOverlay">
+        <div class="console-window">
+            <div class="console-header">
+                <span class="title">▸ КОНСОЛЬ APERTURE SCIENCE v.2.0</span>
+                <button class="console-close" id="consoleClose">&times;</button>
+            </div>
+            <div class="console-output" id="consoleOutput">
+                <div class="line system">> Добро пожаловать в консоль Aperture Science.</div>
+            </div>
+            <div class="console-input-line">
+                <span class="console-prompt">&gt;</span>
+                <input type="text" class="console-input" id="consoleInput" placeholder="введите команду..." autofocus>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
     <div class="container">
 
-        <!-- ===== ШАПКА ===== -->
         <header>
             <div class="logo">
                 FRACTURED APERTURE
@@ -267,7 +497,6 @@
             </nav>
         </header>
 
-        <!-- ===== ГЛАВНЫЙ ЭКРАН ===== -->
         <section class="hero">
             <h1>
                 <span class="highlight">Fractured Aperture</span> —<br>
@@ -280,20 +509,18 @@
             <a href="#" class="btn">Узнать больше</a>
         </section>
 
-        <!-- ===== ОБ ИГРЕ ===== -->
         <section class="about">
             <h2>▸ Об игре</h2>
-
             <div class="about-grid">
                 <div class="col">
                     <p><strong>Сюжет:</strong></p>
                     <p>
-                        Прошло всего несколько мгновений после событий Portal 2. Челл выбралась на поверхность, 
-                        но свобода оказалась ловушкой. Aperture Science не отпускает просто так. Она падает в 
+                        Прошло всего несколько мгновений после событий Portal 2. Челл выбралась на поверхность,
+                        но свобода оказалась ловушкой. Aperture Science не отпускает просто так. Она падает в
                         старые, заброшенные уровни — туда, где наука стала опаснее оружия.
                     </p>
                     <p>
-                        Активирован протокол «Чистый лист». Новый враг не говорит. Не шутит. Не останавливается. 
+                        Активирован протокол «Чистый лист». Новый враг не говорит. Не шутит. Не останавливается.
                         У него белый глаз и одна цель — стереть всё, что связано с порталами.
                     </p>
                     <p>
@@ -302,19 +529,12 @@
                 </div>
                 <div class="col">
                     <p><strong>Механики:</strong></p>
-                    <p>
-                        • <strong>Управление временем:</strong> Устройство, позволяющее замедлять или ускорять время.
-                    </p>
-                    <p>
-                        • <strong>Диалоги с выбором:</strong> Влияют на отношение персонажей и концовку.
-                    </p>
-                    <p>
-                        • <strong>3D-текстуры:</strong> Normal maps и parallax mapping для объёмных поверхностей.
-                    </p>
+                    <p>• <strong>Управление временем:</strong> Устройство, позволяющее замедлять или ускорять время.</p>
+                    <p>• <strong>Диалоги с выбором:</strong> Влияют на отношение персонажей и концовку.</p>
+                    <p>• <strong>3D-текстуры:</strong> Normal maps и parallax mapping для объёмных поверхностей.</p>
                 </div>
             </div>
 
-            <!-- Мини-блок с персонажами -->
             <div class="characters">
                 <h3>▸ Персонажи</h3>
                 <div class="char-list">
@@ -338,26 +558,181 @@
             </div>
         </section>
 
-        <!-- ===== ПОДВАЛ ===== -->
         <footer>
             <div class="links">
-                <a href="#">Telegram</a>
-                <a href="#">Boosty</a>
-                <a href="#">YouTube</a>
+                <a href="https://t.me/Fractured_Aperture" target="_blank">Telegram</a>
+                <a href="https://boosty.to/fractured_aperture" target="_blank">Boosty</a>
             </div>
             <div style="margin-bottom:10px;">© 2026, Fractured Aperture Team.</div>
             <div class="disclaimer">
-                <strong>Дисклеймер:</strong> Fractured Aperture — некоммерческий фанатский проект, не связанный с Valve Corporation. 
-                Portal 2 и все связанные персонажи, логотипы и торговые марки являются интеллектуальной собственностью Valve Corporation. 
+                <strong>Дисклеймер:</strong> Fractured Aperture — некоммерческий фанатский проект, не связанный с Valve Corporation.
+                Portal 2 и все связанные персонажи, логотипы и торговые марки являются интеллектуальной собственностью Valve Corporation.
                 Игра требует наличие лицензионной копии Portal 2 в библиотеке Steam и не содержит файлов Portal 2 в своём дистрибутиве.
             </div>
         </footer>
 
     </div>
 
+    <!-- ===== СКРИПТЫ ===== -->
     <script>
-        console.log('🔶 Fractured Aperture загружена. Протокол «Чистый лист» активен.');
+        // ===== 1. АНИМИРОВАННЫЙ ФОН =====
+        (function particles() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            const particles = [];
+            const PARTICLE_COUNT = 60;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.4;
+                    this.speedY = (Math.random() - 0.5) * 0.4;
+                    this.opacity = Math.random() * 0.5 + 0.1;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > height) this.speedY *= -1;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 165, 0, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            function drawLines() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255, 165, 0, ${0.1 * (1 - dist / 150)})`;
+                            ctx.lineWidth = 0.6;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                drawLines();
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        // ===== 2. КОНСОЛЬ =====
+        const toggleBtn = document.getElementById('consoleToggle');
+        const overlay = document.getElementById('consoleOverlay');
+        const closeBtn = document.getElementById('consoleClose');
+        const output = document.getElementById('consoleOutput');
+        const input = document.getElementById('consoleInput');
+
+        toggleBtn.addEventListener('click', () => {
+            overlay.classList.add('active');
+            setTimeout(() => input.focus(), 300);
+        });
+
+        function closeConsole() {
+            overlay.classList.remove('active');
+        }
+        closeBtn.addEventListener('click', closeConsole);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeConsole();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeConsole();
+            }
+        });
+
+        function addLine(text, className = '') {
+            const div = document.createElement('div');
+            div.className = `line ${className}`;
+            div.textContent = text;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // ===== ТОЛЬКО КОМАНДЫ: 12, 3, clear, exit =====
+        function processCommand(cmd) {
+            const trimmed = cmd.trim().toLowerCase();
+            addLine(`> ${cmd}`, '');
+
+            switch (trimmed) {
+                case '12':
+                    addLine('Выполняется...', 'system');
+                    window.open('https://youtu.be/Gb9X3Dc6WhY?si=cOCrYnn1pUR5FV-q', '_blank');
+                    break;
+
+                case '3':
+                    addLine('Выполняется...', 'system');
+                    window.open('https://youtu.be/jpw2ebhTSKs?si=h9YJgT3G9eKgkROW', '_blank');
+                    break;
+
+                case 'clear':
+                    output.innerHTML = '';
+                    addLine('Консоль очищена.', 'system');
+                    break;
+
+                case 'exit':
+                    addLine('Закрываю консоль...', 'system');
+                    setTimeout(closeConsole, 400);
+                    break;
+
+                case '':
+                    break;
+
+                default:
+                    addLine(`Неизвестная команда: "${cmd}".`, 'error');
+                    break;
+            }
+
+            input.value = '';
+        }
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value;
+                if (cmd.trim()) {
+                    processCommand(cmd);
+                } else {
+                    input.value = '';
+                }
+            }
+        });
+
+        console.log('🔶 Fractured Aperture загружена.');
         console.log('📅 Демо: 21.12.2026');
+        console.log('💻 Нажми кнопку >_ в правом верхнем углу, чтобы открыть консоль.');
     </script>
 
 </body>
