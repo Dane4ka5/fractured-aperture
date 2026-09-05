@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractured Aperture — новая глава Portal</title>
+    <style>
+        /* ---------- ГЛОБАЛЬНЫЙ СТИЛЬ ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ddd;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        /* ---------- ШАПКА ---------- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2a2a2a;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFA500;
+            letter-spacing: 4px;
+        }
+
+        .logo span {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 2px;
+            display: block;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: #FFA500;
+        }
+
+        /* ---------- ГЛАВНЫЙ ЭКРАН (HERO) ---------- */
+        .hero {
+            padding: 70px 0 50px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 .highlight {
+            color: #FFA500;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            color: #FFA500;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .hero .description {
+            font-size: 16px;
+            color: #aaa;
+            max-width: 650px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: transparent;
+            color: #FFA500;
+            border: 2px solid #FFA500;
+            padding: 12px 35px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #FFA500;
+            color: #0a0a0a;
+            box-shadow: 0 0 40px rgba(255, 165, 0, 0.2);
+        }
+
+        /* ---------- БЛОК "ОБ ИГРЕ" ---------- */
+        .about {
+            padding: 50px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .about h2 {
+            font-size: 28px;
+            color: #FFA500;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .about-grid .col p {
+            margin-bottom: 15px;
+            color: #bbb;
+            font-size: 15px;
+        }
+
+        .about-grid .col strong {
+            color: #fff;
+        }
+
+        /* ---------- ПЕРСОНАЖИ (мини) ---------- */
+        .characters {
+            margin-top: 30px;
+        }
+
+        .characters h3 {
+            color: #FFA500;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .char-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .char-item {
+            background: #141414;
+            border: 1px solid #2a2a2a;
+            padding: 15px;
+            transition: 0.3s;
+        }
+
+        .char-item:hover {
+            border-color: #FFA500;
+        }
+
+        .char-item .name {
+            color: #FFA500;
+            font-weight: bold;
+        }
+
+        .char-item .desc {
+            font-size: 13px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* ---------- ПОДВАЛ ---------- */
+        footer {
+            padding: 30px 0 20px;
+            border-top: 1px solid #1a1a1a;
+            font-size: 13px;
+            color: #555;
+        }
+
+        footer .links {
+            display: flex;
+            gap: 20px;
+            margin: 10px 0 15px;
+            flex-wrap: wrap;
+        }
+
+        footer .links a {
+            color: #888;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        footer .links a:hover {
+            color: #FFA500;
+        }
+
+        footer .disclaimer {
+            font-size: 11px;
+            color: #444;
+            max-width: 700px;
+            line-height: 1.4;
+        }
+
+        /* ---------- АДАПТИВНОСТЬ ---------- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .hero h1 {
+                font-size: 28px;
+            }
+            .hero .subtitle {
+                font-size: 17px;
+            }
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .char-list {
+                grid-template-columns: 1fr;
+            }
+            .logo {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <header>
+            <div class="logo">
+                FRACTURED APERTURE
+                <span>— новая глава во вселенной Portal</span>
+            </div>
+            <nav>
+                <a href="#">Об игре</a>
+                <a href="#">Сюжет</a>
+                <a href="#">Механики</a>
+                <a href="#">Медиа</a>
+                <a href="#">Команда</a>
+                <a href="#">Поддержать</a>
+            </nav>
+        </header>
+
+        <!-- ===== ГЛАВНЫЙ ЭКРАН ===== -->
+        <section class="hero">
+            <h1>
+                <span class="highlight">Fractured Aperture</span> —<br>
+                новая глава во вселенной Portal.
+            </h1>
+            <div class="subtitle">Свобода оказалась ловушкой. Протокол «Чистый лист» активирован.</div>
+            <p class="description">
+                Челл потеряла портальную пушку. Старые враги стали тенью. Время сломано.
+            </p>
+            <a href="#" class="btn">Узнать больше</a>
+        </section>
+
+        <!-- ===== ОБ ИГРЕ ===== -->
+        <section class="about">
+            <h2>▸ Об игре</h2>
+
+            <div class="about-grid">
+                <div class="col">
+                    <p><strong>Сюжет:</strong></p>
+                    <p>
+                        Прошло всего несколько мгновений после событий Portal 2. Челл выбралась на поверхность, 
+                        но свобода оказалась ловушкой. Aperture Science не отпускает просто так. Она падает в 
+                        старые, заброшенные уровни — туда, где наука стала опаснее оружия.
+                    </p>
+                    <p>
+                        Активирован протокол «Чистый лист». Новый враг не говорит. Не шутит. Не останавливается. 
+                        У него белый глаз и одна цель — стереть всё, что связано с порталами.
+                    </p>
+                    <p>
+                        У Челл нет портальной пушки. Есть только старые друзья, страх и надежда, что торт не ложь.
+                    </p>
+                </div>
+                <div class="col">
+                    <p><strong>Механики:</strong></p>
+                    <p>
+                        • <strong>Управление временем:</strong> Устройство, позволяющее замедлять или ускорять время.
+                    </p>
+                    <p>
+                        • <strong>Диалоги с выбором:</strong> Влияют на отношение персонажей и концовку.
+                    </p>
+                    <p>
+                        • <strong>3D-текстуры:</strong> Normal maps и parallax mapping для объёмных поверхностей.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Мини-блок с персонажами -->
+            <div class="characters">
+                <h3>▸ Персонажи</h3>
+                <div class="char-list">
+                    <div class="char-item">
+                        <div class="name">GLaDOS</div>
+                        <div class="desc">Она изменилась. Она называет Челл по имени. И, возможно, испечёт торт.</div>
+                    </div>
+                    <div class="char-item">
+                        <div class="name">Уитли</div>
+                        <div class="desc">Он вернулся из космоса. Он не злой. Он просто шар.</div>
+                    </div>
+                    <div class="char-item">
+                        <div class="name">Атлас и Пи-бот</div>
+                        <div class="desc">Старые друзья, которые помогут в финальной битве.</div>
+                    </div>
+                    <div class="char-item">
+                        <div class="name">Секретный гость</div>
+                        <div class="desc">Он не должен был появиться. Но время — не шутка.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <footer>
+            <div class="links">
+                <a href="#">Telegram</a>
+                <a href="#">Boosty</a>
+                <a href="#">YouTube</a>
+            </div>
+            <div style="margin-bottom:10px;">© 2026, Fractured Aperture Team.</div>
+            <div class="disclaimer">
+                <strong>Дисклеймер:</strong> Fractured Aperture — некоммерческий фанатский проект, не связанный с Valve Corporation. 
+                Portal 2 и все связанные персонажи, логотипы и торговые марки являются интеллектуальной собственностью Valve Corporation. 
+                Игра требует наличие лицензионной копии Portal 2 в библиотеке Steam и не содержит файлов Portal 2 в своём дистрибутиве.
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        console.log('🔶 Fractured Aperture загружена. Протокол «Чистый лист» активен.');
+        console.log('📅 Демо: 21.12.2026');
+    </script>
+
+</body>
+</html>
