@@ -376,6 +376,7 @@
         .about {
             padding: 50px 0;
             border-bottom: 1px solid #1a1a1a;
+            scroll-margin-top: 80px; /* чтобы при якоре шапка не перекрывала */
         }
 
         .about h2 {
@@ -572,7 +573,7 @@
                 <span>— новая глава во вселенной Portal</span>
             </div>
             <nav>
-                <a href="#">Об игре</a>
+                <a href="#about">Об игре</a>
                 <a href="#">Сюжет</a>
                 <a href="#">Механики</a>
                 <a href="#">Медиа</a>
@@ -590,10 +591,12 @@
             <p class="description">
                 Челл потеряла портальную пушку. Старые враги стали тенью. Время сломано.
             </p>
-            <a href="#" class="btn">Узнать больше</a>
+            <!-- Кнопка теперь ведёт к блоку "Об игре" -->
+            <a href="#about" class="btn">Узнать больше</a>
         </section>
 
-        <section class="about">
+        <!-- Блоку "Об игре" добавлен id="about" -->
+        <section class="about" id="about">
             <h2>▸ Об игре</h2>
             <div class="about-grid">
                 <div class="col">
@@ -766,13 +769,15 @@
             output.scrollTop = output.scrollHeight;
         }
 
-        // ===== 3. ВИДЕО-ПЛЕЕР =====
+        // ===== 3. ВИДЕО-ПЛЕЕР (с iframe, как ты прислал) =====
         const videoOverlay = document.getElementById('videoOverlay');
         const videoIframe = document.getElementById('videoIframe');
         const videoClose = document.getElementById('videoClose');
 
         function openVideo(videoId) {
-            videoIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
+            // Используем обычный youtube.com/embed (без nocookie, как в твоих iframe)
+            // Добавляем autoplay=1&mute=1 для автоматического запуска без звука
+            videoIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
             videoOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
