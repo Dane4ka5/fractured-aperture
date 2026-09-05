@@ -257,7 +257,7 @@
             border-bottom-color: #FFA500;
         }
 
-        /* ===== ОСТАЛЬНЫЕ БЛОКИ ===== */
+        /* ===== БЛОКИ ===== */
         .hero {
             padding: 70px 0 50px;
             border-bottom: 1px solid #1a1a1a;
@@ -375,6 +375,67 @@
             margin-top: 5px;
         }
 
+        /* ===== РАЗДЕЛ "КОМАНДА" ===== */
+        .team {
+            padding: 50px 0;
+            border-bottom: 1px solid #1a1a1a;
+            scroll-margin-top: 80px;
+        }
+
+        .team h2 {
+            font-size: 28px;
+            color: #FFA500;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+        }
+
+        .team p {
+            color: #bbb;
+            font-size: 15px;
+            margin-bottom: 15px;
+            max-width: 800px;
+        }
+
+        .team ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 20px;
+        }
+
+        .team ul li {
+            color: #ccc;
+            font-size: 15px;
+            padding: 6px 0 6px 25px;
+            position: relative;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .team ul li::before {
+            content: '▸';
+            color: #FFA500;
+            position: absolute;
+            left: 0;
+        }
+
+        .team .contact {
+            margin-top: 25px;
+            padding: 20px;
+            background: #141414;
+            border: 1px solid #2a2a2a;
+        }
+
+        .team .contact a {
+            color: #FFA500;
+            text-decoration: none;
+            border-bottom: 1px dashed #FFA500;
+        }
+
+        .team .contact a:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+        }
+
+        /* ===== ПОДВАЛ ===== */
         footer {
             padding: 30px 0 20px;
             border-top: 1px solid #1a1a1a;
@@ -490,7 +551,7 @@
                 <a href="#">Сюжет</a>
                 <a href="#">Механики</a>
                 <a href="#">Медиа</a>
-                <a href="#">Команда</a>
+                <a href="#team">Команда</a>
                 <a href="#">Поддержать</a>
             </nav>
         </header>
@@ -538,21 +599,52 @@
                 <div class="char-list">
                     <div class="char-item">
                         <div class="name">GLaDOS</div>
-                        <div class="desc">Она изменилась. Она называет Челл по имени. И, возможно, испечёт торт.</div>
+                        <div class="desc">Она изменилась. Она называет Челл по имени. И, возможно, поможет.</div>
                     </div>
                     <div class="char-item">
                         <div class="name">Уитли</div>
-                        <div class="desc">Он вернулся из космоса. Он не злой. Он просто шар.</div>
+                        <div class="desc">Он вернётся из космоса? Он не злой? Известно только одно — он просто шар.</div>
                     </div>
                     <div class="char-item">
                         <div class="name">Атлас и Пи-бот</div>
-                        <div class="desc">Старые друзья, которые помогут в финальной битве.</div>
+                        <div class="desc">Старые друзья, которые помогут в любой момент.</div>
                     </div>
                     <div class="char-item">
                         <div class="name">Секретный гость</div>
-                        <div class="desc">Он не должен был появиться. Но время — не шутка.</div>
+                        <div class="desc">Он не должен был появиться, его потревожили. Он может что-то изменить?.</div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- ===== НОВЫЙ РАЗДЕЛ "КОМАНДА" ===== -->
+        <section class="team" id="team">
+            <h2>▸ Команда</h2>
+            <p>
+                На данный момент Fractured Aperture — это проект одного разработчика. Все сценарии, механики, дизайн уровней и программирование ведутся вручную.
+            </p>
+            <p>
+                Однако я открыт к сотрудничеству. Если вы чувствуете в себе силы и хотите стать частью проекта — пишите.
+            </p>
+
+            <p><strong>🔍 Мы ищем:</strong></p>
+            <ul>
+                <li><strong>Разработчиков на GDScript (Godot 4)</strong> — для работы над игровой логикой, UI и механиками.</li>
+                <li><strong>Дизайнеров уровней</strong> — для создания тестовых камер и окружения.</li>
+                <li><strong>3D-художников</strong> — для создания моделей, текстур и ассетов.</li>
+                <li><strong>Звукорежиссёров</strong> — для озвучивания персонажей и создания атмосферы.</li>
+            </ul>
+
+            <p><strong>📝 Важные условия:</strong></p>
+            <ul>
+                <li>Проект некоммерческий. Оплата не гарантирована.</li>
+                <li>Если игра получит коммерческий успех (например, через платное DLC или саундтрек), доход будет разделён между участниками команды.</li>
+                <li>Это работа ради идеи, а не ради денег.</li>
+            </ul>
+
+            <div class="contact">
+                <p><strong>📲 Контакты:</strong></p>
+                <p>По всем вопросам пишите в Telegram: <a href="https://t.me/Dane4ka5" target="_blank">@Dane4ka5</a></p>
             </div>
         </section>
 
@@ -680,7 +772,7 @@
             output.scrollTop = output.scrollHeight;
         }
 
-        // ===== 3. КОМАНДЫ КОНСОЛИ (открытие в новой вкладке) =====
+        // ===== 3. КОМАНДЫ КОНСОЛИ =====
         function processCommand(cmd) {
             const trimmed = cmd.trim().toLowerCase();
             addLine(`> ${cmd}`, '');
@@ -733,21 +825,17 @@
             }
         });
 
-        // ===== 4. ПЛАВНАЯ ПРОКРУТКА К КНОПКЕ "УЗНАТЬ БОЛЬШЕ" =====
-        document.addEventListener('DOMContentLoaded', function() {
-            const learnBtn = document.getElementById('learnMoreBtn');
-            if (learnBtn) {
-                learnBtn.addEventListener('click', function(e) {
+        // ===== 4. ПЛАВНАЯ ПРОКРУТКА =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const target = document.querySelector(targetId);
+                if (target) {
                     e.preventDefault();
-                    const target = document.querySelector('#about');
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            }
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
         });
 
         console.log('🔶 Fractured Aperture загружена.');
