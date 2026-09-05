@@ -226,9 +226,6 @@
         .console-output .line.success {
             color: #44ff88;
         }
-        .console-output .line.info {
-            color: #66ccff;
-        }
 
         .console-input-line {
             display: flex;
@@ -258,69 +255,6 @@
 
         .console-input:focus {
             border-bottom-color: #FFA500;
-        }
-
-        /* ===== ВИДЕО-ОВЕРЛЕЙ ===== */
-        .video-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            z-index: 300;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            backdrop-filter: blur(6px);
-        }
-
-        .video-overlay.active {
-            display: flex;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            background: #0d0d0d;
-            border: 2px solid #FFA500;
-            padding: 20px 20px 15px;
-            box-shadow: 0 0 80px rgba(255, 165, 0, 0.15);
-        }
-
-        .video-container iframe {
-            width: 100%;
-            aspect-ratio: 16/9;
-            display: block;
-            border: none;
-        }
-
-        .video-close {
-            position: absolute;
-            top: -14px;
-            right: -14px;
-            width: 40px;
-            height: 40px;
-            background: #1a1a1a;
-            border: 2px solid #FFA500;
-            color: #FFA500;
-            font-size: 22px;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.3s;
-            border-radius: 4px;
-            z-index: 10;
-        }
-
-        .video-close:hover {
-            background: #FFA500;
-            color: #0a0a0a;
-            transform: rotate(90deg);
         }
 
         /* ===== ОСТАЛЬНЫЕ БЛОКИ ===== */
@@ -376,7 +310,7 @@
         .about {
             padding: 50px 0;
             border-bottom: 1px solid #1a1a1a;
-            scroll-margin-top: 80px; /* чтобы при якоре шапка не перекрывала */
+            scroll-margin-top: 80px;
         }
 
         .about h2 {
@@ -513,19 +447,6 @@
                 max-height: 250px;
                 font-size: 14px;
             }
-            .video-overlay {
-                padding: 15px;
-            }
-            .video-container {
-                padding: 12px;
-            }
-            .video-close {
-                top: -8px;
-                right: -8px;
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-            }
         }
     </style>
 </head>
@@ -556,14 +477,6 @@
         </div>
     </div>
 
-    <!-- ===== ВИДЕО-ОВЕРЛЕЙ ===== -->
-    <div class="video-overlay" id="videoOverlay">
-        <div class="video-container">
-            <button class="video-close" id="videoClose">&times;</button>
-            <iframe id="videoIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
-        </div>
-    </div>
-
     <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
     <div class="container">
 
@@ -591,11 +504,9 @@
             <p class="description">
                 Челл потеряла портальную пушку. Старые враги стали тенью. Время сломано.
             </p>
-            <!-- Кнопка теперь ведёт к блоку "Об игре" -->
-            <a href="#about" class="btn">Узнать больше</a>
+            <a href="#about" class="btn" id="learnMoreBtn">Узнать больше</a>
         </section>
 
-        <!-- Блоку "Об игре" добавлен id="about" -->
         <section class="about" id="about">
             <h2>▸ Об игре</h2>
             <div class="about-grid">
@@ -769,36 +680,7 @@
             output.scrollTop = output.scrollHeight;
         }
 
-        // ===== 3. ВИДЕО-ПЛЕЕР (с iframe, как ты прислал) =====
-        const videoOverlay = document.getElementById('videoOverlay');
-        const videoIframe = document.getElementById('videoIframe');
-        const videoClose = document.getElementById('videoClose');
-
-        function openVideo(videoId) {
-            // Используем обычный youtube.com/embed (без nocookie, как в твоих iframe)
-            // Добавляем autoplay=1&mute=1 для автоматического запуска без звука
-            videoIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
-            videoOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeVideo() {
-            videoIframe.src = '';
-            videoOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        videoClose.addEventListener('click', closeVideo);
-        videoOverlay.addEventListener('click', (e) => {
-            if (e.target === videoOverlay) closeVideo();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && videoOverlay.classList.contains('active')) {
-                closeVideo();
-            }
-        });
-
-        // ===== 4. КОМАНДЫ КОНСОЛИ =====
+        // ===== 3. КОМАНДЫ КОНСОЛИ (открытие в новой вкладке) =====
         function processCommand(cmd) {
             const trimmed = cmd.trim().toLowerCase();
             addLine(`> ${cmd}`, '');
@@ -806,12 +688,17 @@
             switch (trimmed) {
                 case '12':
                     addLine('Выполняется...', 'system');
-                    openVideo('Gb9X3Dc6WhY'); // Super 8 трейлер
+                    window.open('https://youtu.be/Gb9X3Dc6WhY?si=SrOzL-RkL57XSmnf', '_blank');
                     break;
 
                 case '3':
                     addLine('Выполняется...', 'system');
-                    openVideo('jpw2ebhTSKs'); // Portal 3/HL3 мем
+                    window.open('https://youtu.be/jpw2ebhTSKs?si=Dwlgg-FaM3txz5qJ', '_blank');
+                    break;
+
+                case 'папуасы':
+                    addLine('Выполняется...', 'system');
+                    window.open('https://youtu.be/yAwvnwViwbE?si=KxL4Fep9vlvavdyH', '_blank');
                     break;
 
                 case 'clear':
@@ -846,9 +733,27 @@
             }
         });
 
+        // ===== 4. ПЛАВНАЯ ПРОКРУТКА К КНОПКЕ "УЗНАТЬ БОЛЬШЕ" =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const learnBtn = document.getElementById('learnMoreBtn');
+            if (learnBtn) {
+                learnBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector('#about');
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            }
+        });
+
         console.log('🔶 Fractured Aperture загружена.');
         console.log('📅 Демо: 21.12.2026');
         console.log('💻 Нажми кнопку >_ в правом верхнем углу, чтобы открыть консоль.');
+        console.log('📌 Команды: 12, 3, папуасы, clear, exit');
     </script>
 
 </body>
