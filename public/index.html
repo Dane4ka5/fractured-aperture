@@ -260,6 +260,69 @@
             border-bottom-color: #FFA500;
         }
 
+        /* ===== ВИДЕО-ОВЕРЛЕЙ ===== */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 300;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            backdrop-filter: blur(6px);
+        }
+
+        .video-overlay.active {
+            display: flex;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            background: #0d0d0d;
+            border: 2px solid #FFA500;
+            padding: 20px 20px 15px;
+            box-shadow: 0 0 80px rgba(255, 165, 0, 0.15);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: block;
+            border: none;
+        }
+
+        .video-close {
+            position: absolute;
+            top: -14px;
+            right: -14px;
+            width: 40px;
+            height: 40px;
+            background: #1a1a1a;
+            border: 2px solid #FFA500;
+            color: #FFA500;
+            font-size: 22px;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 4px;
+            z-index: 10;
+        }
+
+        .video-close:hover {
+            background: #FFA500;
+            color: #0a0a0a;
+            transform: rotate(90deg);
+        }
+
         /* ===== ОСТАЛЬНЫЕ БЛОКИ ===== */
         .hero {
             padding: 70px 0 50px;
@@ -449,6 +512,19 @@
                 max-height: 250px;
                 font-size: 14px;
             }
+            .video-overlay {
+                padding: 15px;
+            }
+            .video-container {
+                padding: 12px;
+            }
+            .video-close {
+                top: -8px;
+                right: -8px;
+                width: 32px;
+                height: 32px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -476,6 +552,14 @@
                 <span class="console-prompt">&gt;</span>
                 <input type="text" class="console-input" id="consoleInput" placeholder="введите команду..." autofocus>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== ВИДЕО-ОВЕРЛЕЙ ===== -->
+    <div class="video-overlay" id="videoOverlay">
+        <div class="video-container">
+            <button class="video-close" id="videoClose">&times;</button>
+            <iframe id="videoIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -682,7 +766,34 @@
             output.scrollTop = output.scrollHeight;
         }
 
-        // ===== ТОЛЬКО КОМАНДЫ: 12, 3, clear, exit =====
+        // ===== 3. ВИДЕО-ПЛЕЕР =====
+        const videoOverlay = document.getElementById('videoOverlay');
+        const videoIframe = document.getElementById('videoIframe');
+        const videoClose = document.getElementById('videoClose');
+
+        function openVideo(videoId) {
+            videoIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
+            videoOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideo() {
+            videoIframe.src = '';
+            videoOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        videoClose.addEventListener('click', closeVideo);
+        videoOverlay.addEventListener('click', (e) => {
+            if (e.target === videoOverlay) closeVideo();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && videoOverlay.classList.contains('active')) {
+                closeVideo();
+            }
+        });
+
+        // ===== 4. КОМАНДЫ КОНСОЛИ =====
         function processCommand(cmd) {
             const trimmed = cmd.trim().toLowerCase();
             addLine(`> ${cmd}`, '');
@@ -690,12 +801,12 @@
             switch (trimmed) {
                 case '12':
                     addLine('Выполняется...', 'system');
-                    window.open('https://youtu.be/Gb9X3Dc6WhY?si=cOCrYnn1pUR5FV-q', '_blank');
+                    openVideo('Gb9X3Dc6WhY'); // Super 8 трейлер
                     break;
 
                 case '3':
                     addLine('Выполняется...', 'system');
-                    window.open('https://youtu.be/jpw2ebhTSKs?si=h9YJgT3G9eKgkROW', '_blank');
+                    openVideo('jpw2ebhTSKs'); // Portal 3/HL3 мем
                     break;
 
                 case 'clear':
