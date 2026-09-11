@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход для разработчиков — Fractured Aperture</title>
+    <style>
+        :root {
+            --orange: #FFA500;
+            --orange-glow: rgba(255, 165, 0, 0.3);
+            --red: #FF4444;
+            --green: #44FF88;
+            --bg-dark: #0a0a0a;
+            --bg-panel: #141414;
+            --border: #2a2a2a;
+            --text: #ddd;
+            --text-dim: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image:
+                linear-gradient(rgba(255, 165, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 165, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 450px;
+            background: var(--bg-panel);
+            border: 2px solid var(--orange);
+            padding: 40px 35px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255, 165, 0, 0.15);
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 20px;
+            height: 20px;
+            border-top: 3px solid var(--orange);
+            border-left: 3px solid var(--orange);
+        }
+
+        .login-box::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 20px;
+            height: 20px;
+            border-bottom: 3px solid var(--orange);
+            border-right: 3px solid var(--orange);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header .icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            border: 2px solid var(--orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--orange);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px var(--orange-glow); }
+            50% { box-shadow: 0 0 30px var(--orange-glow); }
+        }
+
+        .login-header h1 {
+            font-size: 20px;
+            color: var(--orange);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            padding: 12px 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: transparent;
+            color: var(--orange);
+            border: 2px solid var(--orange);
+            padding: 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-login:hover {
+            background: var(--orange);
+            color: var(--bg-dark);
+            box-shadow: 0 0 30px var(--orange-glow);
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid var(--red);
+            color: var(--red);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--orange);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <div class="login-header">
+            <div class="icon">🔒</div>
+            <h1>ВХОД ДЛЯ РАЗРАБОТЧИКОВ</h1>
+            <p>Aperture Science · Уровень доступа: 5</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>КОД РАЗРАБОТЧИКА:</label>
+                <input type="password" id="devCode" placeholder="введите код..." autocomplete="off" autofocus>
+            </div>
+            <button type="submit" class="btn-login">Войти</button>
+        </form>
+
+        <div class="error-message" id="errorMessage">
+            ❌ Неверный код разработчика. Доступ запрещён.
+        </div>
+
+        <a href="/" class="back-link">← Вернуться на главную</a>
+    </div>
+
+    <script>
+        // Пароль разработчика (пока хранится тут, потом перенесём на сервер)
+        const DEV_CODE = '05052011+Da';
+
+        const form = document.getElementById('loginForm');
+        const input = document.getElementById('devCode');
+        const error = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const value = input.value.trim();
+
+            if (value === DEV_CODE) {
+                // Успех — переходим на панель
+                window.location.href = '/dev-panel';
+            } else {
+                // Ошибка
+                error.classList.add('show');
+                input.value = '';
+                input.focus();
+                setTimeout(() => error.classList.remove('show'), 3000);
+            }
+        });
+    </script>
+
+</body>
+</html>

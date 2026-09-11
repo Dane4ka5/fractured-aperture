@@ -1184,6 +1184,14 @@
                     addLine('Выполняется...', 'system');
                     window.open('https://youtu.be/yAwvnwViwbE?si=KxL4Fep9vlvavdyH', '_blank');
                     break;
+                
+                case 'dev':
+                    addLine('Переход на страницу разработчиков...', 'system');
+                    setTimeout(() => {
+                        window.location.href = '/dev-login';
+                    }, 500);
+                    break;
+
 
                 case 'clear':
                     output.innerHTML = '';

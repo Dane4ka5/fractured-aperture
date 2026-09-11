@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель разработчика — Fractured Aperture</title>
+    <style>
+        :root {
+            --orange: #FFA500;
+            --orange-glow: rgba(255, 165, 0, 0.3);
+            --green: #44FF88;
+            --blue: #4DA6FF;
+            --bg-dark: #0a0a0a;
+            --bg-panel: #141414;
+            --bg-panel-2: #1a1a1a;
+            --border: #2a2a2a;
+            --text: #ddd;
+            --text-dim: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            padding: 30px 20px;
+            background-image:
+                linear-gradient(rgba(255, 165, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 165, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .panel {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-panel);
+            border: 2px solid var(--orange);
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255, 165, 0, 0.15);
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 20px;
+            height: 20px;
+            border-top: 3px solid var(--orange);
+            border-left: 3px solid var(--orange);
+        }
+
+        .panel::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 20px;
+            height: 20px;
+            border-bottom: 3px solid var(--orange);
+            border-right: 3px solid var(--orange);
+        }
+
+        /* Приветствие */
+        .welcome {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--bg-panel-2) 0%, var(--bg-dark) 100%);
+            border: 1px solid var(--green);
+            box-shadow: 0 0 30px rgba(68, 255, 136, 0.1);
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome-icon {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--green);
+            flex-shrink: 0;
+            animation: pulseGreen 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGreen {
+            0%, 100% { box-shadow: 0 0 10px rgba(68, 255, 136, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(68, 255, 136, 0.4); }
+        }
+
+        .welcome-text h1 {
+            font-size: 22px;
+            color: var(--green);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .welcome-text p {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        /* Заголовки секций */
+        .section-title {
+            font-size: 18px;
+            color: var(--orange);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Список задач */
+        .tasks {
+            margin-bottom: 35px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-panel-2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--orange);
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .task-item:hover {
+            border-left-color: var(--green);
+            transform: translateX(5px);
+        }
+
+        .task-status {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--orange);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--orange);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .task-content strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .task-content p {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        /* Ссылка на репозиторий */
+        .repo-link {
+            display: block;
+            padding: 20px;
+            background: var(--bg-panel-2);
+            border: 1px solid var(--blue);
+            text-decoration: none;
+            transition: 0.3s;
+            margin-bottom: 35px;
+        }
+
+        .repo-link:hover {
+            border-color: var(--orange);
+            box-shadow: 0 0 30px rgba(255, 165, 0, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .repo-link .label {
+            font-size: 12px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .repo-link .url {
+            color: var(--blue);
+            font-size: 15px;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .repo-link:hover .url {
+            color: var(--orange);
+        }
+
+        /* Контакт */
+        .contact-block {
+            padding: 20px;
+            background: var(--bg-panel-2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--green);
+        }
+
+        .contact-block .label {
+            font-size: 12px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .contact-block a {
+            color: var(--green);
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 1px dashed var(--green);
+            transition: 0.3s;
+        }
+
+        .contact-block a:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+        }
+
+        /* Кнопка выхода */
+        .logout {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .logout:hover {
+            border-color: var(--red, #FF4444);
+            color: #FF4444;
+        }
+
+        @media (max-width: 600px) {
+            .panel {
+                padding: 25px 20px;
+            }
+            .welcome {
+                flex-direction: column;
+                text-align: center;
+            }
+            .welcome-text h1 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="panel">
+
+        <!-- ===== ПРИВЕТСТВИЕ ===== -->
+        <div class="welcome">
+            <div class="welcome-icon">✓</div>
+            <div class="welcome-text">
+                <h1>Добро пожаловать, Dane4ka5</h1>
+                <p>Генеральный директор · Fractured Aperture · Уровень доступа: 5</p>
+            </div>
+        </div>
+
+        <!-- ===== ЗАДАЧИ РАЗРАБОТЧИКА ===== -->
+        <div class="section-title">▸ Задачи разработчика</div>
+        <div class="tasks">
+            <div class="task-item">
+                <div class="task-status">1</div>
+                <div class="task-content">
+                    <strong>Завершить редизайн сайта</strong>
+                    <p>Новый дизайн в стиле Aperture Science с анимированным фоном и консолью.</p>
+                </div>
+            </div>
+            <div class="task-item">
+                <div class="task-status">2</div>
+                <div class="task-content">
+                    <strong>Добавить dev-систему</strong>
+                    <p>Вход для разработчиков через консоль и отдельную страницу.</p>
+                </div>
+            </div>
+            <div class="task-item">
+                <div class="task-status">3</div>
+                <div class="task-content">
+                    <strong>Подготовить демо-версию</strong>
+                    <p>Релиз демо запланирован на 21.12.2026.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ССЫЛКА НА РЕПОЗИТОРИЙ ===== -->
+        <div class="section-title">▸ Репозиторий разработчиков</div>
+        <a href="https://github.com/Dane4ka5/fractured-aperture-demo-releases" target="_blank" class="repo-link">
+            <div class="label">ПРИВАТНЫЙ РЕПОЗИТОРИЙ · DEMO RELEASES</div>
+            <div class="url">🔗 github.com/Dane4ka5/fractured-aperture-demo-releases</div>
+        </a>
+
+        <!-- ===== КОНТАКТ ===== -->
+        <div class="section-title">▸ Связь с руководством</div>
+        <div class="contact-block">
+            <div class="label">ПО ВСЕМ ВОПРОСАМ ПИШИТЕ:</div>
+            <a href="https://t.me/Dane4ka5" target="_blank">@Dane4ka5 · Telegram</a>
+        </div>
+
+        <!-- ===== ВЫХОД ===== -->
+        <a href="/" class="logout">← Выйти и вернуться на главную</a>
+
+    </div>
+
+</body>
+</html>
